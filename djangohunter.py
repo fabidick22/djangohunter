@@ -9,7 +9,7 @@ try:
 	import requests
 	import argparse
 	from bs4 import BeautifulSoup
-
+	from Utils.utils import get_keys_from_html
 	from pyfiglet import Figlet
 
 except ImportError as e:
@@ -137,12 +137,12 @@ class Shodan() :
 					request = requests.get('http://{}:{}'.format(ipadress, port), timeout=self.timeout)
 					
 					# Beautiful Soup to parser the content
-					html = BeautifulSoup(request.text, 'html.parser')
+					data_keys = get_keys_from_html(BeautifulSoup(request.text, 'html.parser'))
 
 					keys = []
 
 					for key in mapping:
-						if key in html.prettify():
+						if key in data_keys["Settings"]["variable"]:
 							keys.append(key)
 				except requests.exceptions.RequestException as error:
 					continue
